@@ -27,15 +27,19 @@ func NewBee() *Bee {
 func (b *Bee) Run() error {
 	args := flag.Args()
 
-	flg := args[0]
-	vals := args[1:]
+	var flg string
+	if len(args) == 0 {
+		flg = ""
+	} else {
+		flg = args[0]
+	}
 
 	toRun, ok := b.commands[flg]
 	if !ok {
 		return errors.New("[Bee]: command not recognized")
 	}
 
-	feedBack, err := toRun(nil, vals)
+	feedBack, err := toRun(nil, args)
 	if err != nil {
 		return fmt.Errorf("[Bee]: '%s' error: %w", flg, err)
 	}

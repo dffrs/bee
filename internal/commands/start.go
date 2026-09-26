@@ -9,10 +9,10 @@ import (
 func (st Command) Start(args []string) (string, error) {
 	var path string
 
-	if len(args) == 0 {
+	if len(args) <= 1 {
 		path = "./"
 	} else {
-		path = args[0]
+		path = args[1]
 	}
 
 	dirName := filepath.Join(path, "bee")
