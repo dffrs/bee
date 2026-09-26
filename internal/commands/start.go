@@ -22,5 +22,5 @@ func (st Command) Start(args []string) (string, error) {
 		return "", err
 	}
 
-	return fmt.Sprintf("started bee dir in: %s", dirName), nil
+	return fmt.Sprintf("bee active in: %s\n", dirName), nil
 }

@@ -32,15 +32,15 @@ func (b *Bee) Run() error {
 
 	toRun, ok := b.commands[flg]
 	if !ok {
-		return errors.New("command not recognized")
+		return errors.New("[Bee]: command not recognized")
 	}
 
 	feedBack, err := toRun(nil, vals)
 	if err != nil {
-		return fmt.Errorf("[%s] error: %w", flg, err)
+		return fmt.Errorf("[BEE]: '%s' error: %w", flg, err)
 	}
 
-	fmt.Printf("%s", feedBack)
+	fmt.Printf("[Bee]: %s", feedBack)
 
 	return nil
 }
