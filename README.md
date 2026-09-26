@@ -1,7 +1,8 @@
 # TODOS
 
 - [ ] support flags
-  - [ ] 'start': init a bee dir
+  - [x] ~~'start': init a bee dir~~
+  - [ ] 'help': show usage
   - [ ] 'new': add a new bee task
   - [ ] 'ps': list bee tasks
   - [ ] 'rm': delete a bee task
