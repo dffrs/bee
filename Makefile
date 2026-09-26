@@ -1,5 +1,8 @@
 .DEFAULT_GOAL := build
 
+VERSION ?= dev
+LDFLAGS := -X bee/internal/commands.Version=$(VERSION)
+
 .PHONY: clean fmt vet build
 
 clean:
@@ -9,4 +12,4 @@ fmt: clean
 vet: fmt
 				go vet ./...
 build: vet
-				go build -o bin/bee cmd/main.go
+				go build -ldflags "$(LDFLAGS)" -o bin/bee cmd/main.go

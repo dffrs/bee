@@ -18,7 +18,8 @@ func NewBee() *Bee {
 	flag.Parse()
 
 	commands := map[string]Cmd{
-		"start": cmd.Command.Start,
+		"start":   cmd.Command.Start,
+		"version": cmd.Command.Version,
 	}
 
 	return &Bee{commands: commands}
