@@ -13,7 +13,7 @@ func main() {
 
 	bee := internal.NewBee()
 	if err := bee.Run(); err != nil {
-		fmt.Errorf("error running bee: %w", err)
+		panic(fmt.Errorf("error running bee: %w", err))
 	}
 
 	fmt.Printf("start value: %s", *start)

@@ -9,4 +9,4 @@ fmt: clean
 vet: fmt
 				go vet ./...
 build: vet
-				go build -o bin/bee cmd/bee.go
+				go build -o bin/main cmd/bee.go
