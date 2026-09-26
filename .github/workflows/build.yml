@@ -1,0 +1,70 @@
+name: Build & Release
+
+on:
+  push:
+    tags:
+      - "v*"
+
+permissions:
+  contents: write
+
+concurrency:
+  group: release-${{ github.ref }}
+  cancel-in-progress: false
+
+jobs:
+  build:
+    name: Build ${{ matrix.os }}
+    runs-on: ${{ matrix.os }}
+    permissions:
+      contents: read
+
+    strategy:
+      fail-fast: false
+      matrix:
+        os: [ubuntu-latest]
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup Go
+        uses: actions/setup-go@v5
+        with:
+          go-version-file: go.mod
+          cache: false
+
+      - name: Build
+        run: make build VERSION="${{ github.ref_name }}"
+
+      # Package builds nicely
+      - name: Package
+        run: |
+          mkdir -p release
+          mv bin/bee release/bee
+          zip -j "release/bee-${{ github.ref_name }}-linux-amd64.zip" release/bee
+
+      - name: Upload artifacts
+        uses: actions/upload-artifact@v4
+        with:
+          name: bee-${{ matrix.os }}
+          path: "release/*.zip"
+
+  release:
+    name: Create GitHub Release
+    needs: build
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+
+    steps:
+      - name: Download artifacts
+        uses: actions/download-artifact@v4
+
+      - name: Publish Release
+        uses: softprops/action-gh-release@v2
+        with:
+          tag_name: ${{ github.ref_name }}
+          name: ${{ github.ref_name }}
+          files: |
+            **/*.zip
