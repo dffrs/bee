@@ -37,7 +37,7 @@ func (b *Bee) Run() error {
 
 	feedBack, err := toRun(nil, vals)
 	if err != nil {
-		return fmt.Errorf("[BEE]: '%s' error: %w", flg, err)
+		return fmt.Errorf("[Bee]: '%s' error: %w", flg, err)
 	}
 
 	fmt.Printf("[Bee]: %s", feedBack)
