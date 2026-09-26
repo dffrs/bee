@@ -8,13 +8,18 @@ import (
 	cmd "bee/internal/commands"
 )
 
+type Cmd func(st cmd.Command, args []string) (string, error)
+
 type Bee struct {
-	commands []cmd.Command
+	commands map[string]Cmd
 }
 
 func NewBee() *Bee {
 	flag.Parse()
-	commands := []cmd.Command{}
+
+	commands := map[string]Cmd{
+		"start": cmd.Command.Start,
+	}
 
 	return &Bee{commands: commands}
 }
@@ -25,21 +30,14 @@ func (b *Bee) Run() error {
 	flg := args[0]
 	vals := args[1:]
 
-	var toRun cmd.Command
-	for _, cmd := range b.commands {
-		if cmd.Name == flg {
-			toRun = cmd
-			break
-		}
-	}
-
-	if toRun.Name == "" {
+	toRun, ok := b.commands[flg]
+	if !ok {
 		return errors.New("command not recognized")
 	}
 
-	feedBack, err := toRun.Run(vals)
+	feedBack, err := toRun(nil, vals)
 	if err != nil {
-		return fmt.Errorf("[%s] error: %w", toRun.Name, err)
+		return fmt.Errorf("[%s] error: %w", flg, err)
 	}
 
 	fmt.Printf("%s", feedBack)

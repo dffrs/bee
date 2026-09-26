@@ -6,22 +6,13 @@ import (
 	"path/filepath"
 )
 
-type Start struct {
-	Command
-}
+func (st Command) Start(args []string) (string, error) {
+	var path string
 
-func New() *Start {
-	s := Start{}
-	s.Name = "start"
-
-	return &Start{}
-}
-
-func (st Start) Run(args []string) (string, error) {
-	path := args[0]
-
-	if path == "" {
+	if len(args) == 0 {
 		path = "./"
+	} else {
+		path = args[0]
 	}
 
 	dirName := filepath.Join(path, "bee")
@@ -31,5 +22,5 @@ func (st Start) Run(args []string) (string, error) {
 		return "", err
 	}
 
-	return fmt.Sprintf("start bee dir in: %s", dirName), nil
+	return fmt.Sprintf("started bee dir in: %s", dirName), nil
 }

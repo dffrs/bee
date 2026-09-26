@@ -1,6 +1,3 @@
 package internal
 
-type Command struct {
-	Name string
-	Run  func(args []string) (string, error)
-}
+type Command func(args []string) (string, error)
