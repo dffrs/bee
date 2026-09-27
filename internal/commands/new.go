@@ -58,8 +58,15 @@ func (cm Command) New(args []string) (string, error) {
 	content.WriteString("[Summary]")
 	content.WriteString("\n")
 
-	for _, word := range args[1:] {
-		if _, err := content.WriteString(word + " "); err != nil {
+	for i, word := range args[1:] {
+		var str string
+		if i == len(args[1:])-1 {
+			str = word
+		} else {
+			str = word + " "
+		}
+
+		if _, err := content.WriteString(str); err != nil {
 			return "", errors.New("failed to write to string builder")
 		}
 	}
