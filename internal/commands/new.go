@@ -66,28 +66,17 @@ func tryGetBeeDir() (string, error) {
 	}
 }
 
-func buildContent(args []string) (string, error) {
+func buildContent(args []string) string {
 	content := strings.Builder{}
 
 	content.WriteString("[Summary]")
 	content.WriteString("\n")
-
-	for i, word := range args[1:] {
-		var str string
-		if i == len(args[1:])-1 {
-			str = word
-		} else {
-			str = word + " "
-		}
-
-		if _, err := content.WriteString(str); err != nil {
-			return "", errors.New("failed to write to string builder")
-		}
-	}
-
+	content.WriteString(strings.Join(args[1:], " "))
 	content.WriteString("\n")
 
-	return content.String(), nil
+	// TODO: Write priority, type, body
+
+	return content.String()
 }
 
 func createFile(dir string) (*os.File, string, error) {
@@ -121,10 +110,7 @@ func (cm Command) New(args []string) (string, error) {
 		return "", err
 	}
 
-	content, err := buildContent(args)
-	if err != nil {
-		return "", err
-	}
+	content := buildContent(args)
 
 	newFile, newFilePath, err := createFile(path)
 	if err != nil {
