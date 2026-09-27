@@ -6,6 +6,6 @@ import "fmt"
 // -ldflags "-X bee/internal/commands.Version=<tag>".
 var Version = "dev"
 
-func (st Command) Version(args []string) (string, error) {
+func (cm Command) Version(args []string) (string, error) {
 	return fmt.Sprintf("%s\n", Version), nil
 }
