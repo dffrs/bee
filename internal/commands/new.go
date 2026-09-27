@@ -66,6 +66,18 @@ func buildContent(args []string) (string, error) {
 	return content.String(), nil
 }
 
+func createFile(path string) (*os.File, string, error) {
+	timestamp := int(time.Now().Unix())
+	newFilePath := filepath.Join(path, strconv.Itoa(timestamp))
+
+	f, err := os.Create(fmt.Sprintf("%s.bee", newFilePath))
+	if err != nil {
+		return nil, "", fmt.Errorf("failed to create new bee file: %w", err)
+	}
+
+	return f, newFilePath, nil
+}
+
 func (cm Command) New(args []string) (string, error) {
 	if len(args) <= 1 {
 		return "", errors.New("summary is needed")
@@ -82,16 +94,13 @@ func (cm Command) New(args []string) (string, error) {
 		return "", err
 	}
 
-	timestamp := int(time.Now().Unix())
-	newFilePath := filepath.Join(path, strconv.Itoa(timestamp))
-
-	f, err := os.Create(fmt.Sprintf("%s.bee", newFilePath))
+	newFile, newFilePath, err := createFile(path)
 	if err != nil {
-		return "", fmt.Errorf("failed to create new bee file: %w", err)
+		return "", err
 	}
-	defer f.Close()
+	defer newFile.Close()
 
-	_, err = f.WriteString(content)
+	_, err = newFile.WriteString(content)
 	if err != nil {
 		return "", fmt.Errorf("failed to write to file (%s): %w", newFilePath, err)
 	}
