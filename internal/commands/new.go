@@ -76,8 +76,18 @@ func buildContent(args []string) string {
 	content.WriteString("\n")
 	content.WriteString(strings.Join(args[1:], " "))
 	content.WriteString("\n")
+	content.WriteString("\n")
 
-	// TODO: Write priority, type, body
+	content.WriteString("[Priority]")
+	content.WriteString("\n")
+	content.WriteString("100") // default for now
+	content.WriteString("\n")
+	content.WriteString("\n")
+
+	content.WriteString("[Body]")
+	content.WriteString("\n")
+	content.WriteString("TODO")
+	content.WriteString("\n")
 
 	return content.String()
 }
