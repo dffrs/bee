@@ -72,19 +72,23 @@ func tryGetBeeDir() (string, error) {
 func buildContent(args []string) string {
 	content := strings.Builder{}
 
-	content.WriteString("[Summary]")
+	// TODO: Create a struct for this
+	content.WriteString("## Summary")
+	content.WriteString("\n")
 	content.WriteString("\n")
 	content.WriteString(strings.Join(args[1:], " "))
 	content.WriteString("\n")
 	content.WriteString("\n")
 
-	content.WriteString("[Priority]")
+	content.WriteString("## Priority")
+	content.WriteString("\n")
 	content.WriteString("\n")
 	content.WriteString("100") // default for now
 	content.WriteString("\n")
 	content.WriteString("\n")
 
-	content.WriteString("[Body]")
+	content.WriteString("## Body")
+	content.WriteString("\n")
 	content.WriteString("\n")
 	content.WriteString("TODO")
 	content.WriteString("\n")
@@ -96,7 +100,7 @@ func createFile(dir string) (*os.File, string, error) {
 	const createRetries = 5
 
 	for range createRetries {
-		fullPath := filepath.Join(dir, strconv.FormatInt(time.Now().UnixNano(), 10)+".bee")
+		fullPath := filepath.Join(dir, strconv.FormatInt(time.Now().UnixNano(), 10)+".md")
 
 		f, err := os.OpenFile(fullPath, os.O_RDWR|os.O_CREATE|os.O_EXCL, 0o644)
 		if errors.Is(err, fs.ErrExist) {
