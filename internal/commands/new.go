@@ -42,6 +42,38 @@ func exists() (string, error) {
 	return beePath, nil
 }
 
+func tryGetBeeDir() (string, error) {
+	var path string
+	var err error
+
+	result := make(chan string)
+	errCh := make(chan error)
+
+	defer close(result)
+	defer close(errCh)
+
+	go func() {
+		path, err := exists()
+		if err != nil {
+			errCh <- err
+			return
+		}
+
+		result <- path
+	}()
+
+	select {
+	case path = <-result:
+		return path, nil
+
+	case err = <-errCh:
+		return "", err
+
+	case <-time.After(time.Second * 3):
+		return "", errors.New("timed out trying to get bee directory")
+	}
+}
+
 func buildContent(args []string) (string, error) {
 	content := strings.Builder{}
 
@@ -83,10 +115,9 @@ func (cm Command) New(args []string) (string, error) {
 		return "", errors.New("summary is needed")
 	}
 
-	// TODO: Maybe gorountine with select ?
-	path, err := exists()
+	path, err := tryGetBeeDir()
 	if err != nil {
-		return "", errors.New("failed to get bee directory")
+		return "", err
 	}
 
 	content, err := buildContent(args)
