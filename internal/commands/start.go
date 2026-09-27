@@ -6,7 +6,7 @@ import (
 	"path/filepath"
 )
 
-func (st Command) Start(args []string) (string, error) {
+func (cm Command) Start(args []string) (string, error) {
 	var path string
 
 	if len(args) <= 1 {
@@ -15,7 +15,7 @@ func (st Command) Start(args []string) (string, error) {
 		path = args[1]
 	}
 
-	dirName := filepath.Join(path, "bee")
+	dirName := filepath.Join(path, ".bee")
 
 	err := os.MkdirAll(dirName, os.ModePerm)
 	if err != nil {

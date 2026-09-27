@@ -20,6 +20,7 @@ func NewBee() *Bee {
 	commands := map[string]Cmd{
 		"start":   cmd.Command.Start,
 		"version": cmd.Command.Version,
+		"new":     cmd.Command.New,
 	}
 
 	return &Bee{commands: commands}
