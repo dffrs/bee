@@ -3,6 +3,7 @@ package internal
 import (
 	"errors"
 	"fmt"
+	"io"
 	"io/fs"
 	"os"
 	"path/filepath"
@@ -26,12 +27,12 @@ func exists() (string, error) {
 
 		if d.IsDir() && d.Name() == ".bee" {
 			beePath = path
-			return nil
+			return io.EOF
 		}
 
 		return nil
 	})
-	if err != nil {
+	if err != nil && err != io.EOF {
 		return "", err
 	}
 
