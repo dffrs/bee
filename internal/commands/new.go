@@ -14,7 +14,7 @@ import (
 func findBeeDir() (string, error) {
 	rootDir, err := os.Getwd()
 	if err != nil {
-		return "", err
+		return "", fmt.Errorf("get working directory: %w", err)
 	}
 
 	var beePath string
@@ -31,12 +31,12 @@ func findBeeDir() (string, error) {
 
 		return nil
 	})
-	if err != nil && err != fs.SkipAll {
+	if err != nil {
 		return "", err
 	}
 
 	if beePath == "" {
-		return "", errors.New("not found")
+		return "", fmt.Errorf(".bee directory not found from %s", rootDir)
 	}
 
 	return beePath, nil
