@@ -9,6 +9,8 @@ import (
 	"strconv"
 	"strings"
 	"time"
+
+	t "bee/internal/task"
 )
 
 const (
@@ -75,30 +77,9 @@ func tryGetBeeDir() (string, error) {
 }
 
 func buildContent(args []string) string {
-	content := strings.Builder{}
+	task := t.NewTask(strings.Join(args[1:], " "), 100, "TODO")
 
-	// TODO: Create a struct for this
-	content.WriteString("## Summary")
-	content.WriteString("\n")
-	content.WriteString("\n")
-	content.WriteString(strings.Join(args[1:], " "))
-	content.WriteString("\n")
-	content.WriteString("\n")
-
-	content.WriteString("## Priority")
-	content.WriteString("\n")
-	content.WriteString("\n")
-	content.WriteString("100") // default for now
-	content.WriteString("\n")
-	content.WriteString("\n")
-
-	content.WriteString("## Body")
-	content.WriteString("\n")
-	content.WriteString("\n")
-	content.WriteString("TODO")
-	content.WriteString("\n")
-
-	return content.String()
+	return task.ToMarkdown()
 }
 
 func createFile(dir string) (*os.File, string, error) {
