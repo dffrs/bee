@@ -12,34 +12,37 @@ import (
 )
 
 func findBeeDir() (string, error) {
-	rootDir, err := os.Getwd()
+	dir, err := os.Getwd()
 	if err != nil {
 		return "", fmt.Errorf("get working directory: %w", err)
 	}
 
-	var beePath string
+	for {
+		beePath := filepath.Join(dir, ".bee")
 
-	err = filepath.WalkDir(rootDir, func(path string, d fs.DirEntry, err error) error {
-		if err != nil {
-			return err
+		info, err := os.Stat(beePath)
+		if err == nil {
+			if info.IsDir() {
+				return beePath, nil
+			}
+
+			return "", fmt.Errorf("%s exists but is not a directory", beePath)
 		}
 
-		if d.IsDir() && d.Name() == ".bee" {
-			beePath = path
-			return fs.SkipAll
+		if !errors.Is(err, fs.ErrNotExist) {
+			return "", fmt.Errorf("check %s: %w", beePath, err)
 		}
 
-		return nil
-	})
-	if err != nil {
-		return "", err
+		parent := filepath.Dir(dir)
+
+		if parent == dir {
+			break
+		}
+
+		dir = parent
 	}
 
-	if beePath == "" {
-		return "", fmt.Errorf(".bee directory not found from %s", rootDir)
-	}
-
-	return beePath, nil
+	return "", errors.New(".bee directory not found")
 }
 
 func tryGetBeeDir() (string, error) {
