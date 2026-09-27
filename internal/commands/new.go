@@ -42,17 +42,7 @@ func exists() (string, error) {
 	return beePath, nil
 }
 
-func (cm Command) New(args []string) (string, error) {
-	if len(args) <= 1 {
-		return "", errors.New("summary is needed")
-	}
-
-	// TODO: Maybe gorountine with select ?
-	path, err := exists()
-	if err != nil {
-		return "", errors.New("failed to get bee directory")
-	}
-
+func buildContent(args []string) (string, error) {
 	content := strings.Builder{}
 
 	content.WriteString("[Summary]")
@@ -73,6 +63,25 @@ func (cm Command) New(args []string) (string, error) {
 
 	content.WriteString("\n")
 
+	return content.String(), nil
+}
+
+func (cm Command) New(args []string) (string, error) {
+	if len(args) <= 1 {
+		return "", errors.New("summary is needed")
+	}
+
+	// TODO: Maybe gorountine with select ?
+	path, err := exists()
+	if err != nil {
+		return "", errors.New("failed to get bee directory")
+	}
+
+	content, err := buildContent(args)
+	if err != nil {
+		return "", err
+	}
+
 	timestamp := int(time.Now().Unix())
 	newFilePath := filepath.Join(path, strconv.Itoa(timestamp))
 
@@ -82,7 +91,7 @@ func (cm Command) New(args []string) (string, error) {
 	}
 	defer f.Close()
 
-	_, err = f.WriteString(content.String())
+	_, err = f.WriteString(content)
 	if err != nil {
 		return "", fmt.Errorf("failed to write to file (%s): %w", newFilePath, err)
 	}
