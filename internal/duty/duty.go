@@ -5,17 +5,17 @@ import (
 	"strings"
 )
 
-type Task struct {
+type Duty struct {
 	Summary  string
 	Priority int
 	Body     string
 }
 
-func NewTask(summary string, priority int, body string) *Task {
-	return &Task{Summary: summary, Priority: priority, Body: body}
+func NewDuty(summary string, priority int, body string) *Duty {
+	return &Duty{Summary: summary, Priority: priority, Body: body}
 }
 
-func (t *Task) ToMarkdown() string {
+func (t *Duty) ToMarkdown() string {
 	content := strings.Builder{}
 
 	content.WriteString("## Summary")

@@ -10,7 +10,7 @@ import (
 	"strings"
 	"time"
 
-	t "bee/internal/task"
+	dt "bee/internal/duty"
 )
 
 const (
@@ -77,7 +77,7 @@ func tryGetBeeDir() (string, error) {
 }
 
 func buildContent(args []string) string {
-	task := t.NewTask(strings.Join(args[1:], " "), 100, "TODO")
+	task := dt.NewDuty(strings.Join(args[1:], " "), 100, "TODO")
 
 	return task.ToMarkdown()
 }
