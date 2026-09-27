@@ -11,6 +11,11 @@ import (
 	"time"
 )
 
+const (
+	beeDir = ".bee"
+	beeExt = ".md"
+)
+
 func findBeeDir() (string, error) {
 	dir, err := os.Getwd()
 	if err != nil {
@@ -18,7 +23,7 @@ func findBeeDir() (string, error) {
 	}
 
 	for {
-		beePath := filepath.Join(dir, ".bee")
+		beePath := filepath.Join(dir, beeDir)
 
 		info, err := os.Stat(beePath)
 		if err == nil {
@@ -100,7 +105,7 @@ func createFile(dir string) (*os.File, string, error) {
 	const createRetries = 5
 
 	for range createRetries {
-		fullPath := filepath.Join(dir, strconv.FormatInt(time.Now().UnixNano(), 10)+".md")
+		fullPath := filepath.Join(dir, strconv.FormatInt(time.Now().UnixNano(), 10)+beeExt)
 
 		f, err := os.OpenFile(fullPath, os.O_RDWR|os.O_CREATE|os.O_EXCL, 0o644)
 		if errors.Is(err, fs.ErrExist) {
