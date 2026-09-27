@@ -2,10 +2,13 @@ package internal
 
 import (
 	"errors"
+	"fmt"
 	"io/fs"
 	"os"
 	"path/filepath"
+	"strconv"
 	"strings"
+	"time"
 )
 
 func exists() (string, error) {
@@ -50,16 +53,32 @@ func (cm Command) New(args []string) (string, error) {
 		return "", errors.New("failed to get bee directory")
 	}
 
-	summary := strings.Builder{}
+	content := strings.Builder{}
+
+	content.WriteString("[Summary]")
+	content.WriteString("\n")
 
 	for _, word := range args[1:] {
-		if _, err := summary.WriteString(word + " "); err != nil {
+		if _, err := content.WriteString(word + " "); err != nil {
 			return "", errors.New("failed to write to string builder")
 		}
 	}
 
-	// NOTE: path already includes '.bee' dir
-	_ = path
+	content.WriteString("\n")
 
-	return "added new task", nil
+	timestamp := int(time.Now().Unix())
+	newFilePath := filepath.Join(path, strconv.Itoa(timestamp))
+
+	f, err := os.Create(fmt.Sprintf("%s.bee", newFilePath))
+	if err != nil {
+		return "", fmt.Errorf("failed to create new bee file: %w", err)
+	}
+	defer f.Close()
+
+	_, err = f.WriteString(content.String())
+	if err != nil {
+		return "", fmt.Errorf("failed to write to file (%s): %w", newFilePath, err)
+	}
+
+	return fmt.Sprintf("created a new task (%s)\n", newFilePath), nil
 }
