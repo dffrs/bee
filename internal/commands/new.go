@@ -3,7 +3,6 @@ package internal
 import (
 	"errors"
 	"fmt"
-	"io"
 	"io/fs"
 	"os"
 	"path/filepath"
@@ -27,12 +26,12 @@ func findBeeDir() (string, error) {
 
 		if d.IsDir() && d.Name() == ".bee" {
 			beePath = path
-			return io.EOF
+			return fs.SkipAll
 		}
 
 		return nil
 	})
-	if err != nil && err != io.EOF {
+	if err != nil && err != fs.SkipAll {
 		return "", err
 	}
 
