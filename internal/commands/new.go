@@ -12,7 +12,7 @@ import (
 	"time"
 )
 
-func exists() (string, error) {
+func findBeeDir() (string, error) {
 	rootDir, err := os.Getwd()
 	if err != nil {
 		return "", err
@@ -47,14 +47,11 @@ func tryGetBeeDir() (string, error) {
 	var path string
 	var err error
 
-	result := make(chan string)
-	errCh := make(chan error)
-
-	defer close(result)
-	defer close(errCh)
+	result := make(chan string, 1)
+	errCh := make(chan error, 1)
 
 	go func() {
-		path, err := exists()
+		path, err := findBeeDir()
 		if err != nil {
 			errCh <- err
 			return
