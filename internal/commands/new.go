@@ -98,16 +98,25 @@ func buildContent(args []string) (string, error) {
 	return content.String(), nil
 }
 
-func createFile(path string) (*os.File, string, error) {
-	timestamp := int(time.Now().Unix())
-	newFilePath := filepath.Join(path, strconv.Itoa(timestamp))
+func createFile(dir string) (*os.File, string, error) {
+	const createRetries = 5
 
-	f, err := os.Create(fmt.Sprintf("%s.bee", newFilePath))
-	if err != nil {
-		return nil, "", fmt.Errorf("failed to create new bee file: %w", err)
+	for range createRetries {
+		fullPath := filepath.Join(dir, strconv.FormatInt(time.Now().UnixNano(), 10)+".bee")
+
+		f, err := os.OpenFile(fullPath, os.O_RDWR|os.O_CREATE|os.O_EXCL, 0o644)
+		if errors.Is(err, fs.ErrExist) {
+			continue
+		}
+
+		if err != nil {
+			return nil, "", fmt.Errorf("failed to create new bee file (%s): %w", fullPath, err)
+		}
+
+		return f, fullPath, nil
 	}
 
-	return f, newFilePath, nil
+	return nil, "", fmt.Errorf("failed to create a new bee file in (%s) after %d attempts", dir, createRetries)
 }
 
 func (cm Command) New(args []string) (string, error) {
