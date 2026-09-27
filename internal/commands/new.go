@@ -44,28 +44,23 @@ func findBeeDir() (string, error) {
 }
 
 func tryGetBeeDir() (string, error) {
-	var path string
-	var err error
-
-	result := make(chan string, 1)
-	errCh := make(chan error, 1)
+	result := make(chan struct {
+		path string
+		err  error
+	}, 1)
 
 	go func() {
 		path, err := findBeeDir()
-		if err != nil {
-			errCh <- err
-			return
-		}
 
-		result <- path
+		result <- struct {
+			path string
+			err  error
+		}{path: path, err: err}
 	}()
 
 	select {
-	case path = <-result:
-		return path, nil
-
-	case err = <-errCh:
-		return "", err
+	case res := <-result:
+		return res.path, res.err
 
 	case <-time.After(time.Second * 3):
 		return "", errors.New("timed out trying to get bee directory")
