@@ -38,10 +38,55 @@ func BuildFromMarkdown(path string, duty *Duty) error {
 	}
 	defer file.Close()
 
+	linesRead := 0
+	hasReadSummary := false
+	hasReadPriority := false
+
 	scanner := bufio.NewScanner(file)
+
 	for scanner.Scan() {
-		// TODO: build duty struct here
-		fmt.Println(scanner.Text())
+		line := scanner.Text()
+
+		// must start with '## Summary'
+		if linesRead == 0 && !strings.EqualFold(strings.TrimSpace(line), summaryHeader) {
+			return fmt.Errorf("first line must have a '%s' header", summaryHeader)
+		}
+
+		// so that we don't append this to body
+		if strings.EqualFold(line, summaryHeader) {
+			continue
+		}
+
+		// are we done with summary section ?
+		if strings.EqualFold(line, priorityHeader) {
+			hasReadSummary = true
+			continue
+		}
+
+		// are we done with priority section ?
+		if strings.EqualFold(line, bodyHeader) {
+			hasReadPriority = true
+			continue
+		}
+
+		if !hasReadSummary {
+			duty.Summary += line
+			continue
+		}
+
+		if !hasReadPriority {
+			prio, err := strconv.Atoi(line)
+			if err != nil {
+				return fmt.Errorf("failed to get priority: got '%s'. error: %w", line, err)
+			}
+
+			duty.Priority = prio
+			continue
+		}
+
+		duty.Body += line
+
+		linesRead++
 	}
 
 	if err := scanner.Err(); err != nil {
