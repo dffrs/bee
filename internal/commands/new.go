@@ -18,6 +18,7 @@ const (
 	beeExt = ".md"
 )
 
+// TODO: move me someplace else
 func findBeeDir() (string, error) {
 	dir, err := os.Getwd()
 	if err != nil {
@@ -52,6 +53,7 @@ func findBeeDir() (string, error) {
 	return "", errors.New(".bee directory not found")
 }
 
+// TODO: move me someplace else
 func tryGetBeeDir() (string, error) {
 	result := make(chan struct {
 		path string
