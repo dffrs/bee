@@ -121,3 +121,7 @@ func (t *Duty) ToMarkdown() string {
 
 	return content.String()
 }
+
+func (t *Duty) ToString() string {
+	panic("unimplemented")
+}
