@@ -54,32 +54,45 @@ func BuildFromMarkdown(path string, duty *Duty) error {
 
 		// so that we don't append this to body
 		if strings.EqualFold(line, summaryHeader) {
+			linesRead++
 			continue
 		}
 
 		// are we done with summary section ?
 		if strings.EqualFold(line, priorityHeader) {
 			hasReadSummary = true
+
+			linesRead++
 			continue
 		}
 
 		// are we done with priority section ?
 		if strings.EqualFold(line, bodyHeader) {
 			hasReadPriority = true
+
+			linesRead++
 			continue
 		}
 
 		if !hasReadSummary {
 			duty.Summary += line
+
+			linesRead++
 			continue
 		}
 
 		if !hasReadPriority {
+			// TODO: re-visit this implementation. There must be a smarter way to skip '\n'
+			if line == "" {
+				linesRead++
+				continue
+			}
 			prio, err := strconv.Atoi(line)
 			if err != nil {
 				return fmt.Errorf("failed to get priority: got '%s'. error: %w", line, err)
 			}
 
+			linesRead++
 			duty.Priority = prio
 			continue
 		}
@@ -131,7 +144,6 @@ func (t *Duty) ToString() string {
 
 	content.WriteString("Summary: ")
 	content.WriteString(t.Summary)
-	content.WriteString("")
 
 	return content.String()
 }

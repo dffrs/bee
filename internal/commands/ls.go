@@ -25,7 +25,7 @@ func (cm Command) LS(args []string) (string, error) {
 			return nil
 		}
 
-		var duty *d.Duty
+		duty := new(d.Duty)
 		if err = d.BuildFromMarkdown(path, duty); err != nil {
 			return err
 		}
@@ -38,9 +38,17 @@ func (cm Command) LS(args []string) (string, error) {
 		return "", err
 	}
 
+	// no duties found
+	if len(duties) == 0 {
+		return "not duties found. Run 'bee new <summary>' to create a new duty\n", nil
+	}
+
 	builder := strings.Builder{}
+
+	builder.WriteString("\n")
 	for _, d := range duties {
 		builder.WriteString(d.ToString())
+		builder.WriteString("\n")
 	}
 
 	return builder.String(), nil
