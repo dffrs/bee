@@ -1,6 +1,12 @@
 package internal
 
-import d "bee/internal/duty"
+import (
+	"os"
+	"path/filepath"
+	"strings"
+
+	d "bee/internal/duty"
+)
 
 func (cm Command) LS(args []string) (string, error) {
 	path, err := tryGetBeeDir()
@@ -8,11 +14,34 @@ func (cm Command) LS(args []string) (string, error) {
 		return "", err
 	}
 
-	// TODO: path is the bee dir, not a .md file.
-	var duty *d.Duty
-	if err = d.BuildFromMarkdown(path, duty); err != nil {
+	duties := make([]d.Duty, 0)
+
+	err = filepath.Walk(path, func(path string, info os.FileInfo, err error) error {
+		if err != nil {
+			return err
+		}
+
+		if filepath.Ext(info.Name()) != ".md" {
+			return nil
+		}
+
+		var duty *d.Duty
+		if err = d.BuildFromMarkdown(path, duty); err != nil {
+			return err
+		}
+
+		duties = append(duties, *duty)
+
+		return nil
+	})
+	if err != nil {
 		return "", err
 	}
 
-	return duty.ToString(), nil
+	builder := strings.Builder{}
+	for _, d := range duties {
+		builder.WriteString(d.ToString())
+	}
+
+	return builder.String(), nil
 }

@@ -123,5 +123,15 @@ func (t *Duty) ToMarkdown() string {
 }
 
 func (t *Duty) ToString() string {
-	panic("unimplemented")
+	content := strings.Builder{}
+
+	content.WriteString("Priority: ")
+	content.WriteString(strconv.Itoa(t.Priority))
+	content.WriteString(" | ")
+
+	content.WriteString("Summary: ")
+	content.WriteString(t.Summary)
+	content.WriteString("")
+
+	return content.String()
 }
