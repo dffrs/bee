@@ -6,10 +6,11 @@ import (
 	"strings"
 
 	d "bee/internal/duty"
+	ut "bee/internal/util"
 )
 
 func (cm Command) LS(args []string) (string, error) {
-	path, err := tryGetBeeDir()
+	path, err := ut.TryGetBeeDir()
 	if err != nil {
 		return "", err
 	}
