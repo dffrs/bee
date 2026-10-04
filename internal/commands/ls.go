@@ -33,6 +33,18 @@ func findMarkdownFiles(path string, duties []d.Duty) error {
 	return err
 }
 
+func dutiesOutput(duties []d.Duty) string {
+	builder := strings.Builder{}
+
+	builder.WriteString("\n")
+	for _, d := range duties {
+		builder.WriteString(d.ToString())
+		builder.WriteString("\n")
+	}
+
+	return builder.String()
+}
+
 func (cm Command) LS(args []string) (string, error) {
 	path, err := ut.TryGetBeeDir()
 	if err != nil {
@@ -49,13 +61,5 @@ func (cm Command) LS(args []string) (string, error) {
 		return "not duties found. Run 'bee new <summary>' to create a new duty\n", nil
 	}
 
-	builder := strings.Builder{}
-
-	builder.WriteString("\n")
-	for _, d := range duties {
-		builder.WriteString(d.ToString())
-		builder.WriteString("\n")
-	}
-
-	return builder.String(), nil
+	return dutiesOutput(duties), nil
 }
