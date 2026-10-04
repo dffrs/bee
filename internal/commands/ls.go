@@ -35,7 +35,6 @@ func findMarkdownFiles(path string, duties *[]d.Duty) error {
 func dutiesOutput(duties []d.Duty) string {
 	builder := strings.Builder{}
 
-	builder.WriteString("\n")
 	for _, d := range duties {
 		builder.WriteString(d.ToString())
 		builder.WriteString("\n")
