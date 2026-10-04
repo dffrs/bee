@@ -9,6 +9,8 @@ import (
 	"path/filepath"
 	"strconv"
 	"strings"
+
+	ut "bee/internal/util"
 )
 
 const (
@@ -28,7 +30,7 @@ func NewDuty(summary string, priority int, body string) *Duty {
 }
 
 func BuildFromMarkdown(path string, duty *Duty) error {
-	if filepath.Ext(path) != ".md" {
+	if filepath.Ext(path) != ut.BeeExt {
 		return errors.New("file extension not supported")
 	}
 

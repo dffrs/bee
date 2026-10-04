@@ -9,10 +9,6 @@ import (
 	"time"
 )
 
-const (
-	beeDir = ".bee"
-)
-
 func findBeeDir() (string, error) {
 	dir, err := os.Getwd()
 	if err != nil {
@@ -20,7 +16,7 @@ func findBeeDir() (string, error) {
 	}
 
 	for {
-		beePath := filepath.Join(dir, beeDir)
+		beePath := filepath.Join(dir, BeeDir)
 
 		info, err := os.Stat(beePath)
 		if err == nil {

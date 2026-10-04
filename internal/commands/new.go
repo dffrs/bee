@@ -14,10 +14,6 @@ import (
 	ut "bee/internal/util"
 )
 
-const (
-	beeExt = ".md"
-)
-
 func buildContent(args []string) string {
 	task := dt.NewDuty(strings.Join(args[1:], " "), 100, "TODO")
 
@@ -28,7 +24,7 @@ func createFile(dir string) (*os.File, string, error) {
 	const createRetries = 5
 
 	for range createRetries {
-		fullPath := filepath.Join(dir, strconv.FormatInt(time.Now().UnixNano(), 10)+beeExt)
+		fullPath := filepath.Join(dir, strconv.FormatInt(time.Now().UnixNano(), 10)+ut.BeeExt)
 
 		f, err := os.OpenFile(fullPath, os.O_RDWR|os.O_CREATE|os.O_EXCL, 0o644)
 		if errors.Is(err, fs.ErrExist) {

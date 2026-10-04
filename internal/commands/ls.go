@@ -15,8 +15,7 @@ func findMarkdownFiles(path string, duties *[]d.Duty) error {
 			return err
 		}
 
-		// TODO: have const for this
-		if filepath.Ext(info.Name()) != ".md" {
+		if filepath.Ext(info.Name()) != ut.BeeExt {
 			return nil
 		}
 
