@@ -9,7 +9,7 @@ import (
 	ut "bee/internal/util"
 )
 
-func findMarkdownFiles(path string, duties []d.Duty) error {
+func findMarkdownFiles(path string, duties *[]d.Duty) error {
 	err := filepath.Walk(path, func(path string, info os.FileInfo, err error) error {
 		if err != nil {
 			return err
@@ -25,7 +25,7 @@ func findMarkdownFiles(path string, duties []d.Duty) error {
 			return err
 		}
 
-		duties = append(duties, *duty)
+		*duties = append(*duties, *duty)
 
 		return nil
 	})
@@ -52,7 +52,7 @@ func (cm Command) LS(args []string) (string, error) {
 	}
 
 	duties := make([]d.Duty, 0)
-	if err := findMarkdownFiles(path, duties); err != nil {
+	if err := findMarkdownFiles(path, &duties); err != nil {
 		return "", err
 	}
 
