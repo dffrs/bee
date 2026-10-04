@@ -9,19 +9,13 @@ import (
 	ut "bee/internal/util"
 )
 
-func (cm Command) LS(args []string) (string, error) {
-	path, err := ut.TryGetBeeDir()
-	if err != nil {
-		return "", err
-	}
-
-	duties := make([]d.Duty, 0)
-
-	err = filepath.Walk(path, func(path string, info os.FileInfo, err error) error {
+func findMarkdownFiles(path string, duties []d.Duty) error {
+	err := filepath.Walk(path, func(path string, info os.FileInfo, err error) error {
 		if err != nil {
 			return err
 		}
 
+		// TODO: have const for this
 		if filepath.Ext(info.Name()) != ".md" {
 			return nil
 		}
@@ -35,7 +29,18 @@ func (cm Command) LS(args []string) (string, error) {
 
 		return nil
 	})
+
+	return err
+}
+
+func (cm Command) LS(args []string) (string, error) {
+	path, err := ut.TryGetBeeDir()
 	if err != nil {
+		return "", err
+	}
+
+	duties := make([]d.Duty, 0)
+	if err := findMarkdownFiles(path, duties); err != nil {
 		return "", err
 	}
 
