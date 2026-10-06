@@ -134,11 +134,11 @@ func (t *Duty) ToString() string {
 	content := strings.Builder{}
 
 	content.WriteString("Priority: ")
-	content.WriteString(strconv.Itoa(t.Priority))
+	content.WriteString(ut.Magenta + strconv.Itoa(t.Priority) + ut.Reset)
 	content.WriteString(" | ")
 
 	content.WriteString("Summary: ")
-	content.WriteString(t.Summary)
+	content.WriteString(ut.Gray + t.Summary + ut.Reset)
 
 	return content.String()
 }

@@ -13,7 +13,7 @@ func (cm Command) Purge(args []string) (string, error) {
 		return "", err
 	}
 
-	fmt.Printf("[Bee]\nfound bee dir in: %s\n", path)
+	fmt.Printf(ut.Yellow+"[Bee]"+ut.Reset+"\nfound bee dir in: %s\n", path)
 
 	confirmed, err := ut.Confirm("\ndo you want to delete it ? [Y/n]", true)
 	if err != nil {

@@ -5,6 +5,7 @@ import (
 	"fmt"
 
 	cmd "bee/internal/commands"
+	ut "bee/internal/util"
 )
 
 type Cmd func(st cmd.Command, args []string) (string, error)
@@ -47,15 +48,15 @@ func (b *Bee) Run() error {
 			return err
 		}
 
-		return fmt.Errorf("[Bee]\ncommand not recognized.\n\n%s", help)
+		return fmt.Errorf(ut.Yellow+"[Bee]\n"+ut.Reset+"command not recognized.\n\n%s", help)
 	}
 
 	feedBack, err := toRun(nil, args)
 	if err != nil {
-		return fmt.Errorf("[Bee]\n'%s' error: %w", flg, err)
+		return fmt.Errorf(ut.Yellow+"[Bee]\n"+ut.Reset+"'%s' error: %w", flg, err)
 	}
 
-	fmt.Printf("[Bee]\n%s", feedBack)
+	fmt.Printf(ut.Yellow+"[Bee]\n"+ut.Reset+"%s", feedBack)
 
 	return nil
 }

@@ -71,6 +71,6 @@ to work on next.
 
 ## TODO
 
-- [ ] colors on ls command
+- [x] ~~ANSI colors~~
 - [ ] add Status section to duties
 - [ ] bee folder instead of bee duty files.
