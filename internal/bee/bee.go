@@ -23,6 +23,7 @@ func NewBee() *Bee {
 		"new":     cmd.Command.New,
 		"ls":      cmd.Command.LS,
 		"purge":   cmd.Command.Purge,
+		"help":    cmd.Command.Help,
 	}
 
 	return &Bee{commands: commands}
