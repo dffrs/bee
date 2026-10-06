@@ -15,7 +15,7 @@ import (
 )
 
 func buildContent(args []string) string {
-	task := dt.NewDuty(strings.Join(args[1:], " "), 100, "TODO")
+	task := dt.NewDuty(strings.Join(args[1:], " "), 100, "In Progress", "TODO")
 
 	return task.ToMarkdown()
 }

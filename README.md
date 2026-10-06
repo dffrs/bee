@@ -57,6 +57,10 @@ fix login bug
 
 100
 
+## Status
+
+In Progress
+
 ## Body
 
 TODO
@@ -66,11 +70,11 @@ TODO
 - **Priority** is a whole number. New tasks start at 100.
 - **Body** is free space for notes, steps, or links. New tasks start with `TODO`.
 
-Tasks are listed as `Priority: <n> | Summary: <summary>`, so you always know what
+Tasks are listed as `Priority: <n> | Status: <status> |  Summary: <summary>`, so you always know what
 to work on next.
 
 ## TODO
 
 - [x] ~~ANSI colors~~
-- [ ] add Status section to duties
+- [x] ~~add Status section to duties~~
 - [ ] bee folder instead of bee duty files.
