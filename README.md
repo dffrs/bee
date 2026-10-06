@@ -1,4 +1,4 @@
-# ![bee](./assets/appicon.png) bee
+# ![bee](./assets/appicon32.png) bee
 
 bee is a small command line tool for tracking what needs to be done in a project.
 It stores tasks as plain markdown files inside a `.bee` directory, so your TODO
