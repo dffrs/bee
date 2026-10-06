@@ -146,8 +146,15 @@ func (t *Duty) ToString() string {
 	content.WriteString(ut.Magenta + strconv.Itoa(t.Priority) + ut.Reset)
 	content.WriteString(" | ")
 
+	statusColor := ut.Gray
+	if strings.EqualFold(t.Status, "in progress") || strings.EqualFold(t.Status, "todo") || strings.EqualFold(t.Status, "unfinished") {
+		statusColor = ut.Yellow
+	} else if strings.EqualFold(t.Status, "done") || strings.EqualFold(t.Status, "completed") || strings.EqualFold(t.Status, "finished") {
+		statusColor = ut.Green
+	}
+
 	content.WriteString("Status: ")
-	content.WriteString(ut.Gray + t.Status + ut.Reset)
+	content.WriteString(statusColor + t.Status + ut.Reset)
 	content.WriteString(" | ")
 
 	content.WriteString("Summary: ")
