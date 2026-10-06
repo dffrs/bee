@@ -16,8 +16,6 @@ list lives next to your code, is easy to read, and is easy to edit with any edit
 Prebuilt binaries are available on the releases page:
 [https://github.com/dffrs/bee/releases](https://github.com/dffrs/bee/releases)
 
-Releases are built automatically when a version tag is pushed.
-
 ## Getting started
 
 ```sh
@@ -70,40 +68,3 @@ TODO
 
 Tasks are listed as `Priority: <n> | Summary: <summary>`, so you always know what
 to work on next.
-
-## Build
-
-bee is written in Go and built with `make`:
-
-```sh
-make build                 # builds bin/bee
-make build VERSION=v1.0.0  # stamps the version into the binary
-```
-
-The build runs `clean`, `fmt`, and `vet` before compiling, so `make build` also
-checks that the code is formatted and passes `go vet`.
-
-Run the binary with:
-
-```sh
-./bin/bee help
-```
-
-## Development
-
-```sh
-make        # same as make build
-make fmt    # format the code
-make vet    # run go vet
-make clean  # remove build artifacts
-```
-
-The project layout:
-
-```text
-cmd/            entry point
-internal/bee    command dispatch
-internal/commands   command implementations
-internal/duty   task parsing and rendering
-internal/util   helpers
-```
