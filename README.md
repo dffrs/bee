@@ -1,10 +1,109 @@
-# TODOS
+# bee
 
-- [ ] support flags
-  - [x] ~~'start': init a bee dir~~
-  - [x] ~~'version': print version~~
-  - [x] ~~'help': show usage~~
-  - [x] ~~'new': add a new bee task~~
-  - [x] 'ls': list bee tasks
-  - [x] 'purge': delete a bee dir
-- [x] configure CI/CD
+bee is a small command line tool for tracking what needs to be done in a project.
+It stores tasks as plain markdown files inside a `.bee` directory, so your TODO
+list lives next to your code, is easy to read, and is easy to edit with any editor.
+
+## Why bee
+
+- Your tasks are plain markdown files.
+- Everything is stored inside your project, so the tasks travel with the code.
+- Priorities are simple numbers, the highest priority is what you fix first.
+- The tool is a single binary with no runtime dependencies.
+
+## Download
+
+Prebuilt binaries are available on the releases page:
+[https://github.com/dffrs/bee/releases](https://github.com/dffrs/bee/releases)
+
+Releases are built automatically when a version tag is pushed.
+
+## Getting started
+
+```sh
+bee start             # creates a .bee directory in the current directory
+bee new fix login bug # creates a new task
+bee ls                # lists your tasks
+```
+
+When a task is done, edit the file and remove it, or run `bee purge` to delete
+the whole `.bee` directory.
+
+bee looks for the `.bee` directory in the current directory and then walks up
+through the parent directories, so the commands work from anywhere inside your
+project.
+
+## Commands
+
+| Command             | Description                                                   |
+| ------------------- | ------------------------------------------------------------- |
+| `bee start [path]`  | Create a `.bee` directory. Defaults to the current directory. |
+| `bee new <summary>` | Create a new task with the given summary.                     |
+| `bee ls`            | List every task found in the `.bee` directory.                |
+| `bee purge`         | Delete the `.bee` directory after confirmation.               |
+| `bee version`       | Print the version of the binary.                              |
+| `bee help`          | Print the list of supported commands.                         |
+
+## Task files
+
+Each task is a markdown file named after the time it was created, for example
+`.bee/1759533000000000000.md`. A task has three sections that must appear in
+this order:
+
+```md
+## Summary
+
+fix login bug
+
+## Priority
+
+100
+
+## Body
+
+TODO
+```
+
+- **Summary** is the short description shown when listing tasks.
+- **Priority** is a whole number. New tasks start at 100.
+- **Body** is free space for notes, steps, or links. New tasks start with `TODO`.
+
+Tasks are listed as `Priority: <n> | Summary: <summary>`, so you always know what
+to work on next.
+
+## Build
+
+bee is written in Go and built with `make`:
+
+```sh
+make build                 # builds bin/bee
+make build VERSION=v1.0.0  # stamps the version into the binary
+```
+
+The build runs `clean`, `fmt`, and `vet` before compiling, so `make build` also
+checks that the code is formatted and passes `go vet`.
+
+Run the binary with:
+
+```sh
+./bin/bee help
+```
+
+## Development
+
+```sh
+make        # same as make build
+make fmt    # format the code
+make vet    # run go vet
+make clean  # remove build artifacts
+```
+
+The project layout:
+
+```text
+cmd/            entry point
+internal/bee    command dispatch
+internal/commands   command implementations
+internal/duty   task parsing and rendering
+internal/util   helpers
+```
