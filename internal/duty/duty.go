@@ -15,19 +15,21 @@ import (
 const (
 	summaryHeader  string = "## Summary"
 	priorityHeader string = "## Priority"
+	statusHeader   string = "## Status"
 	bodyHeader     string = "## Body"
 )
 
 type Duty struct {
 	Summary  string
 	Priority int
+	Status   string
 	Body     string
 }
 
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-func splitSections(content string) (summary, priority, body string, err error) {
-	headers := []string{summaryHeader, priorityHeader, bodyHeader}
+func splitSections(content string) (summary, priority, status, body string, err error) {
+	headers := []string{summaryHeader, priorityHeader, statusHeader, bodyHeader}
 
 	var (
 		sections = make([]string, len(headers))
@@ -43,7 +45,7 @@ func splitSections(content string) (summary, priority, body string, err error) {
 
 		if idx >= 0 {
 			if idx != opened+1 {
-				return "", "", "", fmt.Errorf("expected the '%s' header, got '%s'", headers[opened+1], line)
+				return "", "", "", "", fmt.Errorf("expected the '%s' header, got '%s'", headers[opened+1], line)
 			}
 
 			opened = idx
@@ -51,21 +53,21 @@ func splitSections(content string) (summary, priority, body string, err error) {
 		}
 
 		if opened < 0 {
-			return "", "", "", fmt.Errorf("first line must have a '%s' header", summaryHeader)
+			return "", "", "", "", fmt.Errorf("first line must have a '%s' header", summaryHeader)
 		}
 
 		sections[opened] += line + "\n"
 	}
 
 	if opened != len(headers)-1 {
-		return "", "", "", fmt.Errorf("'%s' header not found", headers[opened+1])
+		return "", "", "", "", fmt.Errorf("'%s' header not found", headers[opened+1])
 	}
 
-	return strings.TrimSpace(sections[0]), strings.TrimSpace(sections[1]), strings.TrimSpace(sections[2]), nil
+	return strings.TrimSpace(sections[0]), strings.TrimSpace(sections[1]), strings.TrimSpace(sections[2]), strings.TrimSpace(sections[3]), nil
 }
 
 func parseMarkdown(content string) (Duty, error) {
-	summary, priorityText, body, err := splitSections(content)
+	summary, priorityText, status, body, err := splitSections(content)
 	if err != nil {
 		return Duty{}, err
 	}
@@ -75,13 +77,13 @@ func parseMarkdown(content string) (Duty, error) {
 		return Duty{}, fmt.Errorf("failed to get priority: got '%s'. error: %w", priorityText, err)
 	}
 
-	return Duty{Summary: summary, Priority: priority, Body: body}, nil
+	return Duty{Summary: summary, Priority: priority, Status: status, Body: body}, nil
 }
 
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-func NewDuty(summary string, priority int, body string) *Duty {
-	return &Duty{Summary: summary, Priority: priority, Body: body}
+func NewDuty(summary string, priority int, status string, body string) *Duty {
+	return &Duty{Summary: summary, Priority: priority, Status: status, Body: body}
 }
 
 func BuildFromMarkdown(path string, duty *Duty) error {
@@ -121,6 +123,13 @@ func (t *Duty) ToMarkdown() string {
 	content.WriteString("\n")
 	content.WriteString("\n")
 
+	content.WriteString(statusHeader)
+	content.WriteString("\n")
+	content.WriteString("\n")
+	content.WriteString(t.Status)
+	content.WriteString("\n")
+	content.WriteString("\n")
+
 	content.WriteString(bodyHeader)
 	content.WriteString("\n")
 	content.WriteString("\n")
@@ -135,6 +144,10 @@ func (t *Duty) ToString() string {
 
 	content.WriteString("Priority: ")
 	content.WriteString(ut.Magenta + strconv.Itoa(t.Priority) + ut.Reset)
+	content.WriteString(" | ")
+
+	content.WriteString("Status: ")
+	content.WriteString(ut.Gray + t.Status + ut.Reset)
 	content.WriteString(" | ")
 
 	content.WriteString("Summary: ")
