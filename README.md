@@ -68,3 +68,9 @@ TODO
 
 Tasks are listed as `Priority: <n> | Summary: <summary>`, so you always know what
 to work on next.
+
+## TODO
+
+- [ ] colors on ls command
+- [ ] add Status section to duties
+- [ ] bee folder instead of bee duty files.
