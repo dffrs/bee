@@ -1,7 +1,6 @@
 package internal
 
 import (
-	"errors"
 	"flag"
 	"fmt"
 
@@ -41,7 +40,14 @@ func (b *Bee) Run() error {
 
 	toRun, ok := b.commands[flg]
 	if !ok {
-		return errors.New("[Bee]\ncommand not recognized")
+		helpCmd := b.commands["help"]
+
+		help, err := helpCmd(nil, args)
+		if err != nil {
+			return err
+		}
+
+		return fmt.Errorf("[Bee]\ncommand not recognized.\n\n%s", help)
 	}
 
 	feedBack, err := toRun(nil, args)
