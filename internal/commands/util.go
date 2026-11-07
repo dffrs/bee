@@ -24,7 +24,7 @@ func findInLine(haystack, needle string) ([]string, error) {
 	left := haystack[leftBound:idxFind]
 	right := haystack[rightStart:rightBound]
 
-	needle = fmt.Sprintf(ut.Yellow+"%s"+ut.Reset, needle)
+	needle = fmt.Sprintf(ut.Green+"%s"+ut.Reset, needle)
 
 	return []string{left, needle, right}, nil
 }

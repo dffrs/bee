@@ -2,6 +2,7 @@ package internal
 
 import (
 	"errors"
+	"fmt"
 	"strconv"
 	"strings"
 
@@ -46,6 +47,36 @@ func findInBody(duties []d.Duty, toFind string) (string, error) {
 	return findIn(bodies, toFind)
 }
 
+func findInAny(duties []d.Duty, toFind string) (string, error) {
+	needles := ""
+
+	summNeedle, err := findInSummary(duties, toFind)
+	if err == nil {
+		needles += fmt.Sprintf(ut.Magenta+"%s"+ut.Reset+"\n%s", "Summary", summNeedle)
+	}
+
+	prioNeedle, err := findInPriorities(duties, toFind)
+	if err == nil {
+		needles += fmt.Sprintf(ut.Magenta+"%s"+ut.Reset+"\n%s", "Priority", prioNeedle)
+	}
+
+	statusNeedle, err := findInStatus(duties, toFind)
+	if err == nil {
+		needles += fmt.Sprintf(ut.Magenta+"%s"+ut.Reset+"\n%s", "Status", statusNeedle)
+	}
+
+	bodyNeedle, err := findInBody(duties, toFind)
+	if err == nil {
+		needles += fmt.Sprintf(ut.Magenta+"%s"+ut.Reset+"\n%s", "Body", bodyNeedle)
+	}
+
+	if len(needles) == 0 {
+		return "", errors.New("match not found")
+	}
+
+	return needles, nil
+}
+
 //////////////////////////////////////////
 
 func (cm Command) Find(args []string) (string, error) {
@@ -83,8 +114,8 @@ func (cm Command) Find(args []string) (string, error) {
 		return findInStatus(duties, toFind)
 	case "body":
 		return findInBody(duties, toFind)
-	// case "any":
-
+	case "any":
+		return findInAny(duties, toFind)
 	default:
 		return "", errors.New("option not recognized")
 	}
