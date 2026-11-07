@@ -38,6 +38,7 @@ project.
 | `bee start [path]`  | Create a `.bee` directory. Defaults to the current directory. |
 | `bee new <summary>` | Create a new task with the given summary.                     |
 | `bee ls`            | List every task found in the `.bee` directory.                |
+| `bee find <option> <value>` | Find tasks matching a value in `summary`, `priority`, `status`, `body`, or `any`. |
 | `bee purge`         | Delete the `.bee` directory after confirmation.               |
 | `bee version`       | Print the version of the binary.                              |
 | `bee help`          | Print the list of supported commands.                         |
