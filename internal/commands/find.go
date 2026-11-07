@@ -9,6 +9,45 @@ import (
 	ut "bee/internal/util"
 )
 
+// ////////////////////////////////////////
+func findInSummary(duties []d.Duty, toFind string) (string, error) {
+	summaries := make([]string, 0)
+	for _, duty := range duties {
+		summaries = append(summaries, duty.Summary)
+	}
+
+	return findIn(summaries, toFind)
+}
+
+func findInPriorities(duties []d.Duty, toFind string) (string, error) {
+	priorities := make([]string, 0)
+	for _, duty := range duties {
+		priorities = append(priorities, strconv.Itoa(duty.Priority))
+	}
+
+	return findIn(priorities, toFind)
+}
+
+func findInStatus(duties []d.Duty, toFind string) (string, error) {
+	statuses := make([]string, 0)
+	for _, duty := range duties {
+		statuses = append(statuses, duty.Status)
+	}
+
+	return findIn(statuses, toFind)
+}
+
+func findInBody(duties []d.Duty, toFind string) (string, error) {
+	bodies := make([]string, 0)
+	for _, duty := range duties {
+		bodies = append(bodies, strings.Split(duty.Body, "\n")...)
+	}
+
+	return findIn(bodies, toFind)
+}
+
+//////////////////////////////////////////
+
 func (cm Command) Find(args []string) (string, error) {
 	if len(args) <= 1 {
 		return "", errors.New("option is needed")
@@ -37,33 +76,13 @@ func (cm Command) Find(args []string) (string, error) {
 
 	switch option {
 	case "summary":
-		summaries := make([]string, 0)
-		for _, duty := range duties {
-			summaries = append(summaries, duty.Summary)
-		}
-
-		return findIn(summaries, toFind)
+		return findInSummary(duties, toFind)
 	case "priority":
-		priorities := make([]string, 0)
-		for _, duty := range duties {
-			priorities = append(priorities, strconv.Itoa(duty.Priority))
-		}
-
-		return findIn(priorities, toFind)
+		return findInPriorities(duties, toFind)
 	case "status":
-		statuses := make([]string, 0)
-		for _, duty := range duties {
-			statuses = append(statuses, duty.Status)
-		}
-
-		return findIn(statuses, toFind)
+		return findInStatus(duties, toFind)
 	case "body":
-		bodies := make([]string, 0)
-		for _, duty := range duties {
-			bodies = append(bodies, strings.Split(duty.Body, "\n")...)
-		}
-
-		return findIn(bodies, toFind)
+		return findInBody(duties, toFind)
 	// case "any":
 
 	default:
