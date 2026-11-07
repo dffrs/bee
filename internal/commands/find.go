@@ -18,16 +18,12 @@ func findInLine(haystack, needle string) ([]string, error) {
 		return nil, errors.New("no matches found")
 	}
 
-	leftBound := math.Max(0, float64(idxFind-window))
-	rightBound := math.Min(float64(len(haystack)-1), float64(idxFind+len(needle)-1+window))
+	leftBound := int(math.Max(0, float64(idxFind-window)))
+	rightStart := idxFind + len(needle)
+	rightBound := int(math.Min(float64(len(haystack)), float64(rightStart+window)))
 
-	temp := idxFind + len(needle)
-	if temp >= len(haystack) {
-		temp = len(haystack) - 1
-	}
-
-	left := haystack[int(leftBound):idxFind]
-	right := haystack[temp:int(rightBound)]
+	left := haystack[leftBound:idxFind]
+	right := haystack[rightStart:rightBound]
 
 	needle = fmt.Sprintf(ut.Yellow+"%s"+ut.Reset, needle)
 
@@ -43,7 +39,7 @@ func findInSummary(duties []d.Duty, toFind string) string {
 			continue
 		}
 
-		nail = strings.Join(match, "") + "\n"
+		nail += strings.Join(match, "") + "\n"
 	}
 
 	return nail
