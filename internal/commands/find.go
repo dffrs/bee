@@ -31,7 +31,7 @@ func findInLine(haystack, needle string) ([]string, error) {
 	return []string{left, needle, right}, nil
 }
 
-func findIn(haystack []string, needle string) string {
+func findIn(haystack []string, needle string) (string, error) {
 	needles := ""
 
 	for _, hay := range haystack {
@@ -43,7 +43,11 @@ func findIn(haystack []string, needle string) string {
 		needles += strings.Join(match, "") + "\n"
 	}
 
-	return needles
+	if len(needles) == 0 {
+		return "", errors.New("no matches found")
+	}
+
+	return needles, nil
 }
 
 func (cm Command) Find(args []string) (string, error) {
@@ -79,28 +83,28 @@ func (cm Command) Find(args []string) (string, error) {
 			summaries = append(summaries, duty.Summary)
 		}
 
-		return findIn(summaries, toFind), nil
+		return findIn(summaries, toFind)
 	case "priority":
 		priorities := make([]string, 0)
 		for _, duty := range duties {
 			priorities = append(priorities, strconv.Itoa(duty.Priority))
 		}
 
-		return findIn(priorities, toFind), nil
+		return findIn(priorities, toFind)
 	case "status":
 		statuses := make([]string, 0)
 		for _, duty := range duties {
 			statuses = append(statuses, duty.Status)
 		}
 
-		return findIn(statuses, toFind), nil
+		return findIn(statuses, toFind)
 	case "body":
 		bodies := make([]string, 0)
 		for _, duty := range duties {
 			bodies = append(bodies, strings.Split(duty.Body, "\n")...)
 		}
 
-		return findIn(bodies, toFind), nil
+		return findIn(bodies, toFind)
 	// case "any":
 
 	default:
