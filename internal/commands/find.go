@@ -47,8 +47,11 @@ func findInSummary(duties []d.Duty, toFind string) string {
 
 func (cm Command) Find(args []string) (string, error) {
 	if len(args) <= 1 {
-		// TODO: get proper error messsage
 		return "", errors.New("option is needed")
+	}
+
+	if len(args) <= 2 {
+		return "", errors.New("value is needed")
 	}
 
 	path, err := ut.TryGetBeeDir()
