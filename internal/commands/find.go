@@ -11,63 +11,40 @@ import (
 )
 
 // ////////////////////////////////////////
-func findInSummary(duties []d.Duty, toFind string) (string, error) {
-	summaries := make([]string, 0)
-	for _, duty := range duties {
-		summaries = append(summaries, duty.Summary)
+func findInDuty(duty d.Duty, option string, toFind string) (string, error) {
+	switch option {
+	case "summary":
+		return findIn([]string{duty.Summary}, toFind)
+	case "priority":
+		return findIn([]string{strconv.Itoa(duty.Priority)}, toFind)
+	case "status":
+		return findIn([]string{duty.Status}, toFind)
+	case "body":
+		return findIn(strings.Split(duty.Body, "\n"), toFind)
+	case "any":
+		return findInAnyDuty(duty, toFind)
+	default:
+		return "", errors.New("option not recognized")
 	}
-
-	return findIn(summaries, toFind)
 }
 
-func findInPriorities(duties []d.Duty, toFind string) (string, error) {
-	priorities := make([]string, 0)
-	for _, duty := range duties {
-		priorities = append(priorities, strconv.Itoa(duty.Priority))
+func findInAnyDuty(duty d.Duty, toFind string) (string, error) {
+	fields := []struct {
+		name   string
+		values []string
+	}{
+		{"Summary", []string{duty.Summary}},
+		{"Priority", []string{strconv.Itoa(duty.Priority)}},
+		{"Status", []string{duty.Status}},
+		{"Body", strings.Split(duty.Body, "\n")},
 	}
 
-	return findIn(priorities, toFind)
-}
-
-func findInStatus(duties []d.Duty, toFind string) (string, error) {
-	statuses := make([]string, 0)
-	for _, duty := range duties {
-		statuses = append(statuses, duty.Status)
-	}
-
-	return findIn(statuses, toFind)
-}
-
-func findInBody(duties []d.Duty, toFind string) (string, error) {
-	bodies := make([]string, 0)
-	for _, duty := range duties {
-		bodies = append(bodies, strings.Split(duty.Body, "\n")...)
-	}
-
-	return findIn(bodies, toFind)
-}
-
-func findInAny(duties []d.Duty, toFind string) (string, error) {
 	needles := ""
-
-	summNeedle, err := findInSummary(duties, toFind)
-	if err == nil {
-		needles += fmt.Sprintf(ut.Magenta+"%s"+ut.Reset+"\n%s", "Summary", summNeedle)
-	}
-
-	prioNeedle, err := findInPriorities(duties, toFind)
-	if err == nil {
-		needles += fmt.Sprintf(ut.Magenta+"%s"+ut.Reset+"\n%s", "Priority", prioNeedle)
-	}
-
-	statusNeedle, err := findInStatus(duties, toFind)
-	if err == nil {
-		needles += fmt.Sprintf(ut.Magenta+"%s"+ut.Reset+"\n%s", "Status", statusNeedle)
-	}
-
-	bodyNeedle, err := findInBody(duties, toFind)
-	if err == nil {
-		needles += fmt.Sprintf(ut.Magenta+"%s"+ut.Reset+"\n%s", "Body", bodyNeedle)
+	for _, field := range fields {
+		matches, err := findIn(field.values, toFind)
+		if err == nil {
+			needles += fmt.Sprintf(ut.Magenta+"%s"+ut.Reset+"\n%s", field.name, matches)
+		}
 	}
 
 	if len(needles) == 0 {
@@ -75,6 +52,50 @@ func findInAny(duties []d.Duty, toFind string) (string, error) {
 	}
 
 	return needles, nil
+}
+
+func findInDuties(duties []d.Duty, option string, toFind string) (string, error) {
+	needles := ""
+
+	for _, duty := range duties {
+		matches, err := findInDuty(duty, option, toFind)
+		if err != nil {
+			continue
+		}
+
+		if len(needles) > 0 {
+			needles += "\n--------------------------------\n\n"
+		}
+
+		needles += matches
+		needles += fmt.Sprintf(ut.Gray+"\nFile\n%s\n"+ut.Reset, duty.Path)
+	}
+
+	if len(needles) == 0 {
+		return "", errors.New("match not found")
+	}
+
+	return needles, nil
+}
+
+func findInSummary(duties []d.Duty, toFind string) (string, error) {
+	return findInDuties(duties, "summary", toFind)
+}
+
+func findInPriorities(duties []d.Duty, toFind string) (string, error) {
+	return findInDuties(duties, "priority", toFind)
+}
+
+func findInStatus(duties []d.Duty, toFind string) (string, error) {
+	return findInDuties(duties, "status", toFind)
+}
+
+func findInBody(duties []d.Duty, toFind string) (string, error) {
+	return findInDuties(duties, "body", toFind)
+}
+
+func findInAny(duties []d.Duty, toFind string) (string, error) {
+	return findInDuties(duties, "any", toFind)
 }
 
 //////////////////////////////////////////

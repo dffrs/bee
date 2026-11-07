@@ -24,6 +24,7 @@ type Duty struct {
 	Priority int
 	Status   string
 	Body     string
+	Path     string
 }
 
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -101,6 +102,7 @@ func BuildFromMarkdown(path string, duty *Duty) error {
 		return fmt.Errorf("invalid duty file (%s): %w", path, err)
 	}
 
+	parsed.Path = filepath.Base(path)
 	*duty = parsed
 
 	return nil
