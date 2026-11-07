@@ -46,7 +46,7 @@ project.
 ## Task files
 
 Each task is a markdown file named after the time it was created, for example
-`.bee/1759533000000000000.md`. A task has three sections that must appear in
+`.bee/1759533000000000000.md`. A task has four sections that must appear in
 this order:
 
 ```md
@@ -69,6 +69,7 @@ TODO
 
 - **Summary** is the short description shown when listing tasks.
 - **Priority** is a whole number. New tasks start at 100.
+- **Status** is the current state of the task. New tasks start with `In Progress`.
 - **Body** is free space for notes, steps, or links. New tasks start with `TODO`.
 
 Tasks are listed as `Priority: <n> | Status: <status> |  Summary: <summary>`, so you always know what
