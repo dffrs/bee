@@ -4,6 +4,7 @@ import (
 	"errors"
 	"fmt"
 	"math"
+	"strconv"
 	"strings"
 
 	d "bee/internal/duty"
@@ -79,9 +80,27 @@ func (cm Command) Find(args []string) (string, error) {
 		}
 
 		return findIn(summaries, toFind), nil
-	// case "priority":
-	// case "status":
-	// case "body":
+	case "priority":
+		priorities := make([]string, 0)
+		for _, duty := range duties {
+			priorities = append(priorities, strconv.Itoa(duty.Priority))
+		}
+
+		return findIn(priorities, toFind), nil
+	case "status":
+		statuses := make([]string, 0)
+		for _, duty := range duties {
+			statuses = append(statuses, duty.Status)
+		}
+
+		return findIn(statuses, toFind), nil
+	case "body":
+		bodies := make([]string, 0)
+		for _, duty := range duties {
+			bodies = append(bodies, strings.Split(duty.Body, "\n")...)
+		}
+
+		return findIn(bodies, toFind), nil
 	// case "any":
 
 	default:
