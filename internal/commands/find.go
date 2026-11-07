@@ -30,19 +30,19 @@ func findInLine(haystack, needle string) ([]string, error) {
 	return []string{left, needle, right}, nil
 }
 
-func findInSummary(duties []d.Duty, toFind string) string {
-	nail := ""
+func findIn(haystack []string, needle string) string {
+	needles := ""
 
-	for _, duty := range duties {
-		match, err := findInLine(duty.Summary, toFind)
+	for _, hay := range haystack {
+		match, err := findInLine(hay, needle)
 		if err != nil {
 			continue
 		}
 
-		nail += strings.Join(match, "") + "\n"
+		needles += strings.Join(match, "") + "\n"
 	}
 
-	return nail
+	return needles
 }
 
 func (cm Command) Find(args []string) (string, error) {
@@ -73,7 +73,12 @@ func (cm Command) Find(args []string) (string, error) {
 
 	switch option {
 	case "summary":
-		return findInSummary(duties, toFind), nil
+		summaries := make([]string, 0)
+		for _, duty := range duties {
+			summaries = append(summaries, duty.Summary)
+		}
+
+		return findIn(summaries, toFind), nil
 	// case "priority":
 	// case "status":
 	// case "body":
