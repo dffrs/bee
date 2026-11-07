@@ -33,19 +33,20 @@ project.
 
 ## Commands
 
-| Command             | Description                                                   |
-| ------------------- | ------------------------------------------------------------- |
-| `bee start [path]`  | Create a `.bee` directory. Defaults to the current directory. |
-| `bee new <summary>` | Create a new task with the given summary.                     |
-| `bee ls`            | List every task found in the `.bee` directory.                |
-| `bee purge`         | Delete the `.bee` directory after confirmation.               |
-| `bee version`       | Print the version of the binary.                              |
-| `bee help`          | Print the list of supported commands.                         |
+| Command                     | Description                                                                       |
+| --------------------------- | --------------------------------------------------------------------------------- |
+| `bee start <path>`          | Create a `.bee` directory. Defaults to the current directory.                     |
+| `bee new <summary>`         | Create a new task with the given summary.                                         |
+| `bee find [option] <value>` | Find tasks matching a value in `summary`, `priority`, `status`, `body`, or `any`. |
+| `bee ls`                    | List every task found in the `.bee` directory.                                    |
+| `bee purge`                 | Delete the `.bee` directory after confirmation.                                   |
+| `bee version`               | Print the version of the binary.                                                  |
+| `bee help`                  | Print the list of supported commands.                                             |
 
 ## Task files
 
 Each task is a markdown file named after the time it was created, for example
-`.bee/1759533000000000000.md`. A task has three sections that must appear in
+`.bee/1759533000000000000.md`. A task has four sections that must appear in
 this order:
 
 ```md
@@ -68,6 +69,7 @@ TODO
 
 - **Summary** is the short description shown when listing tasks.
 - **Priority** is a whole number. New tasks start at 100.
+- **Status** is the current state of the task. New tasks start with `In Progress`.
 - **Body** is free space for notes, steps, or links. New tasks start with `TODO`.
 
 Tasks are listed as `Priority: <n> | Status: <status> |  Summary: <summary>`, so you always know what
@@ -77,4 +79,5 @@ to work on next.
 
 - [x] ~~ANSI colors~~
 - [x] ~~add Status section to duties~~
+- [x] ~~add 'find' command~~
 - [ ] bee folder instead of bee duty files.

@@ -22,6 +22,7 @@ func NewBee() *Bee {
 		"version": cmd.Command.Version,
 		"new":     cmd.Command.New,
 		"ls":      cmd.Command.LS,
+		"find":    cmd.Command.Find,
 		"purge":   cmd.Command.Purge,
 		"help":    cmd.Command.Help,
 	}
